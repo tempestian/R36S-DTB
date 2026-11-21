@@ -52,3 +52,10 @@ Kartı cihaza takıp ilk kurulumu tamamladıktan sonra sesi kalıcı olarak otom
 * **Anakart Modeli:** G80CA-MB V1.2-20250423
 * **Audio Codec:** Rockchip RK817 Codec (I2C)
 * **Ekran Paneli:** 3.5 inç 640x480 IPS Panel 8 (KD35T133)
+
+
+---
+
+## Katkıda Bulunanlar (Contributors)
+* **[Bayram (Tempestian)](https://github.com/tempestian)** - Donanım analizi, test ve proje sahibi
+* **Gemini (DeepMind)** - DTB decompile/patchleme, amfi hata tespiti ve ses yaması
