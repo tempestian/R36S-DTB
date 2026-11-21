@@ -1,49 +1,34 @@
 # R36S (G80CA-MB V1.2-20250423) Panel 8 / Panel 9 DTB & Boot Files
 
-Bu repo, **R36S Klon (Anakart: G80CA-MB V1.2-20250423)** el konsolları için özel olarak hazırlanmış ve test edilmiş **DTB**, **Boot** ve **Ses Yaması (Audio Fix)** dosyalarını içerir.
+Bu repo, **R36S Klon (Anakart: G80CA-MB V1.2-20250423)** el konsolları için özel olarak hazırlanmış ve test edilmiş **DTB**, **Boot** ve **Tek Tıkla Ses Yaması** dosyalarını içerir.
 
 ---
 
-## Karşılaşılan ve Çözülen Sorunlar
+## ⚡ 1 Dakikada Hızlı Kurulum Rehberi
 
-1. **Siyah Ekran Problemi:**
-   * Cihazda kullanılan Panel 8 (`elida,kd35t133` MIPI DSI) ekran denetleyicisi ile tam uyumlu DTB ve boot yapılandırması sunulmuştur.
-2. **İlk Açılışta Ses Gelmeme (Uyutup Uyandırmadan Ses Gelmemesi):**
-   * **Kök Neden:** `G80CA-MB V1.2` anakart revizyonunda donanımsal ses yükseltici amfi devresi ilk boot anında kapalı (mute/sleep) başlar. Cihaz elle uyku moduna alınıp tekrar uyandırıldığında kernel `/usr/lib/systemd/system-sleep/sleep post` yordamını çalıştırarak ses donanımını tetikler.
-   * **Çözüm:** EmulationStation arayüz başlatıcısına eklenen otomatik arka plan tetikleyicisi sayesinde cihaz açılır açılmaz uyandırma sinyali gönderilir; kullanıcı hiçbir tuşa basmadan ilk saniyeden itibaren ses aktif hale gelir.
+Yeni bir işletim sistemi (ArkOS, dArkOS vb.) kurduğunuzda sadece iki adımda cihazı tamamen hazır hale getirebilirsiniz:
+
+### 1. Adım: Ekranı ve Sistemi Açma (DTB Dosyaları)
+1. MicroSD kartınıza ArkOS / dArkOS imajını yazdırın (flash edin).
+2. Bilgisayarınızda beliren **`BOOT`** bölümünü açın.
+3. Bu depodaki ana dizinde yer alan:
+   * **`rk3326-r36s-linux.dtb`**
+   * **`rg351v-uboot.dtb`**
+   * **`boot.ini`**
+   dosyalarını doğrudan **`BOOT`** bölümüne sürükleyip bırakın (üzerine yazmayı onaylayın).
 
 ---
 
-## Kurulum Talimatı (Sıfırdan İşletim Sistemi Kurulduğunda)
+### 2. Adım: İlk Açılışta Ses Sorununu Çözme (Tek Tıkla Menüden)
+Bu klon anakartta donanımsal amfi uyku pini farklı olduğu için cihazı uyutup uyandırmadan ses gelmez. Bunu çözmek için:
 
-### 1. Adım: Ekran ve DTB Dosyalarını Atma
-1. MicroSD kartınıza işletim sistemini (ArkOS / dArkOS RE vb.) yazdırın.
-2. Bilgisayarınızda beliren **`BOOT`** bölümüne girin.
-3. Bu repodaki ana dizinde bulunan:
-   * `rk3326-r36s-linux.dtb`
-   * `rg351v-uboot.dtb`
-   * `boot.ini`
-   dosyalarını doğrudan `BOOT` bölümüne kopyalayın (üzerine yazmayı onaylayın).
+1. Bu repodaki **`apply_audio_fix.sh`** dosyasını MicroSD kartınızın **`EASYROMS`** (veya `roms`) bölümü içindeki **`tools`** klasörüne atın.
+2. SD kartı R36S'e takıp cihazı açın.
+3. Cihazın ana menüsünden **Options / Tools** sekmesine girin.
+4. Listede görünen **`apply_audio_fix`** seçeneğini **A** tuşuna basarak çalıştırın.
+5. Ekranda yeşil onay mesajı belirecek ve işlem tamamlanacaktır!
 
-### 2. Adım: İlk Açılışta Ses Yamasını Uygulama (Audio Fix)
-Kartı cihaza takıp ilk kurulumu tamamladıktan sonra sesi kalıcı olarak otomatik açmak için iki basit yöntem vardır:
-
-#### A) Otomatik Script İle (Önerilen):
-* `audio-fix/install_audio_fix.sh` dosyasını SD kartın `EASYROMS/tools` klasörüne atıp cihazdaki **Tools** menüsünden çalıştırabilir veya konsoldan şu komutu verebilirsiniz:
-  ```bash
-  sudo bash /path/to/install_audio_fix.sh
-  ```
-
-#### B) Elle Dosya Düzenleme:
-* SD kartın `ROOTFS` bölümündeki `/usr/bin/emulationstation/emulationstation.sh` dosyasını açın.
-* `export XDG_RUNTIME_DIR=...` satırının hemen altına şu satırları ekleyin:
-  ```bash
-  # Quick sleep/wake trigger to wake the hardware amplifier
-  if [ ! -f "/dev/shm/.BOOT_AUDIO_TRIGGERED" ]; then
-      touch /dev/shm/.BOOT_AUDIO_TRIGGERED
-      sudo /usr/lib/systemd/system-sleep/sleep post >/dev/null 2>&1 &
-  fi
-  ```
+> **Tebrikler!** Artık cihazınız her açıldığında ekran düzgün gelecek ve ses elinizi güç tuşuna sürmenize gerek kalmadan kendiliğinden açık olacaktır.
 
 ---
 
@@ -52,7 +37,7 @@ Kartı cihaza takıp ilk kurulumu tamamladıktan sonra sesi kalıcı olarak otom
 * **Anakart Modeli:** G80CA-MB V1.2-20250423
 * **Audio Codec:** Rockchip RK817 Codec (I2C)
 * **Ekran Paneli:** 3.5 inç 640x480 IPS Panel 8 (KD35T133)
-
+* **Desteklenen Alternatifler:** `dtb-variants/` altında Panel 9 varyantı da mevcuttur.
 
 ---
 
